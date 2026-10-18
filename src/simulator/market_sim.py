@@ -1,5 +1,6 @@
 import random
 import math
+import time
 
 
 from src.implementations.order_book import OrderBook
@@ -10,14 +11,14 @@ class MarketSimulator:
     def __init__(self, book: OrderBook, agents: list[Agent]):
         self.book = book
         self.agents = agents
-        self.current_time = 0.0
+        self.current_time = time.time()
 
     def step(self):
         # below is a simple impl of possion exp market sim  
         # assume lamda = 10 events
         # tau = -ln(U) / 10
 
-        lam =- 10
+        lam = 10
         u = max(random.random(), 1e-6)
 
         tau = -math.log(u) / lam
@@ -33,6 +34,7 @@ class MarketSimulator:
             _, order_id, side, price, size, timestamp = action
             try:
                 self.book.add_order(order_id, side, price, size, timestamp)
+                print(f"Order ({order_id}, {side}, {price}, {size}, {timestamp})")
             except ValueError:
                 pass  
 
