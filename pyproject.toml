@@ -1,0 +1,7 @@
+[project]
+name = "agentsnmarket"
+version = "0.1.0"
+description = "Mimicing a market and letting agents trade in it"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
