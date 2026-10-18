@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional
 from src.models.order import Order
-from src.models.order_queue_level import OrderQueueLevel
+from src.implementations.price_level import PriceLevel
 
 
 
@@ -10,8 +10,8 @@ class AbstractOrderBook(ABC):
 
     def __init__(self):
         self.orders: Dict[int, Order] = {}
-        self.bid_levels: Dict[float, OrderQueueLevel] = {}
-        self.ask_levels: Dict[float, OrderQueueLevel] = {}
+        self.bid_levels: Dict[float, PriceLevel] = {}
+        self.ask_levels: Dict[float, PriceLevel] = {}
         self.bid_prices: List[float] = []  # make sure to store -ve for maxheap
         self.ask_prices: List[float] = [] 
 
