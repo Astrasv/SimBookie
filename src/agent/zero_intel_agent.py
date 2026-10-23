@@ -11,10 +11,12 @@ class ZeroIntelligenceAgent(Agent):
 
     def generate_action(self, book: OrderBook, current_time: float):
         # Determine action type:
-        #  0 = Limit Order
+        # 0 = Limit Order
         # 1 = Cancel
         # 2 = Market-ish action
-        action_type = random.choices([0, 1], weights=[0.7, 0.3])[0]
+        
+         
+        action_type = random.choices([0, 1, 2], weights=[0.65,0.25,0.15])[0]
 
         if action_type == 0 or not book.orders:
             # Place a limit order near the mid price
@@ -36,9 +38,12 @@ class ZeroIntelligenceAgent(Agent):
 
             return ("add", order_id, side, round(price, 2), size, current_time)
 
+        elif action_type == 1:
+            order_id = random.choice(list(book.orders.keys()))
+            return ('cancel', order_id)
         else:
-            if book.orders:
-                random_order_id = random.choice(list(book.orders.keys()))
-                return ("cancel", random_order_id)
+            side = random.choice(['buy', 'sell'])
+            size = random.choice([5, 10, 15])
+            return ('market', side, size)
 
         return None
