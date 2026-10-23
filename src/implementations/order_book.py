@@ -1,9 +1,10 @@
-from src.interface.orderbook_parent import AbstractOrderBook
-from src.models.order import Order
-from src.implementations.price_level import PriceLevel
-
 import bisect
 from typing import Optional
+
+from src.implementations.price_level import PriceLevel
+from src.interface.orderbook_parent import AbstractOrderBook
+from src.models.order import Order
+
 
 class OrderBook(AbstractOrderBook):
     __slots__ = ()
@@ -75,3 +76,60 @@ class OrderBook(AbstractOrderBook):
             return None
         price = self.ask_prices[0]
         return price, self.ask_levels[price].total_size
+
+    def execute_market_order(self, side: str, size: float) -> list[dict]:
+        trades = []
+        remaining_size = size
+
+        if side == "buy":
+            # match against ask with lowest price first
+
+            while remaining_size > 0 and self.ask_prices:
+                best_price = self.ask_prices[0]
+                level = self.ask_levels[best_price]
+
+                while remaining_size > 0 and not level.is_empty():
+                    order = level.head
+                    fill_size = min(remaining_size, order.size)
+
+                    # Record trade
+                    trades.append(
+                        {
+                            "price": best_price,
+                            "size": fill_size,
+                            "maker_order_id": order.order_id,
+                        }
+                    )
+
+                    order.size -= fill_size
+                    remaining_size -= fill_size
+
+                    if order.size == 0:
+                        self.cancel_order(order.order_id)
+                        # NOTE FOR ME: cancel_order cleans up the level and ask_prices if empty
+
+        elif side == "sell":
+            # match against bids with highest price first
+            while remaining_size > 0 and self.bid_prices:
+                best_price = -self.bid_prices[0]
+                level = self.bid_levels[best_price]
+
+                while remaining_size > 0 and not level.is_empty():
+                    order = level.head
+                    fill_size = min(remaining_size, order.size)
+
+                    trades.append(
+                        {
+                            "price": best_price,
+                            "size": fill_size,
+                            "maker_order_id": order.order_id,
+                        }
+                    )
+
+                    order.size -= fill_size
+                    remaining_size -= fill_size
+
+                    if order.size == 0:
+                        self.cancel_order(order.order_id)
+
+        return trades
