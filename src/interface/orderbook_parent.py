@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Dict, List, Optional
 from src.models.order import Order
 from src.implementations.price_level import PriceLevel
-from typing import list, Dict
+# from typing import list, Dict
 
 
 class AbstractOrderBook(ABC):

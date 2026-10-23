@@ -41,6 +41,13 @@ class MarketSimulator:
         elif action[0] == "cancel":
             _, order_id = action
             self.book.cancel_order(order_id)
+            print(f"Cancelled ({order_id})")
+            
+        elif action[0] == "market":
+            _, side, size  = action
+            self.book.execute_market_order(side, size)
+            print(f"Executed Market Order ({side},{size})")
+            
 
     def run(self, steps: int):
         for _ in range(steps):
