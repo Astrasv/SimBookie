@@ -1,7 +1,7 @@
 [project]
-name = "agentsnmarket"
+name = "SimBookie"
 version = "0.1.0"
-description = "Mimicing a market and letting agents trade in it"
+description = "SimBookie aims to simulate financial market plus other external factors and letting rogue AI agents trade in this simulated world"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = []
